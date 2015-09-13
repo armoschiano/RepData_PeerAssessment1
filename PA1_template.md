@@ -39,7 +39,9 @@ names(activity.data.agg) <- c("date", "steps")
 
 ```r
 # make a histogram of the total number of steps taken each day
-ggplot(activity.data.agg, aes(x=steps)) + geom_histogram(binwidth=2000)
+ggplot(activity.data.agg, aes(x=steps)) + 
+    geom_histogram(binwidth=2000) +
+    ggtitle("Histogram of the total number of steps taken each day")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
@@ -115,7 +117,7 @@ activity.data.fill <- activity.data
 # add a new column with the mean values per interval and recycle
 activity.data.fill$steps.avg <- activity.data.agg.int$steps
 
-#  fill in all of the missing values in the dataset using the mean
+#  fill in all of the missing values in the dataset using the mean per interval
 na.values <- is.na(activity.data.fill$steps)
 activity.data.fill$steps[na.values] <- activity.data.fill$steps.avg[na.values]
 
@@ -130,7 +132,9 @@ activity.data.fill.agg <- aggregate(list(steps = activity.data.fill$steps),
 ```r
 # make a new histogram of the total number of steps taken each day
 # with the new imputed dataset
-ggplot(activity.data.fill.agg, aes(x=steps)) + geom_histogram(binwidth=2000)
+ggplot(activity.data.fill.agg, aes(x=steps)) + 
+    geom_histogram(binwidth=2000) +
+    ggtitle("Histogram of the total number of steps taken each day (imputed dataset)")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
