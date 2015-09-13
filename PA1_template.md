@@ -1,14 +1,10 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
 
-```{r, echo=TRUE}
+
+```r
 # clean up the environment
 rm(list=ls()) 
 
@@ -30,7 +26,8 @@ activity.data <- read.csv(fileName, na.strings = "NA")
 ```
 
 ## What is mean total number of steps taken per day?
-```{r, echo=TRUE}
+
+```r
 # aggregate steps data by date
 activity.data.agg <- aggregate(x = activity.data$steps,
                                by = list(activity.data$date),
@@ -39,23 +36,37 @@ activity.data.agg <- aggregate(x = activity.data$steps,
 names(activity.data.agg) <- c("date", "steps")
 ```
 
-```{r, echo=TRUE}
+
+```r
 # make a histogram of the total number of steps taken each day
 ggplot(activity.data.agg, aes(x=steps)) + geom_histogram(binwidth=2000)
 ```
 
-```{r, echo=TRUE}
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+
+```r
 # get the mean of total number of steps taken per day
 mean(activity.data.agg$steps, na.rm = TRUE)
 ```
 
-```{r, echo=TRUE}
+```
+## [1] 9354.23
+```
+
+
+```r
 # get the median of total number of steps taken per day
 median(activity.data.agg$steps, na.rm = TRUE)
 ```
+
+```
+## [1] 10395
+```
 ## What is the average daily activity pattern?
 
-```{r, echo=TRUE}
+
+```r
 # aggregate steps data by interval
 activity.data.agg.int <- aggregate(x = list(steps = activity.data$steps),
                                by = list(
@@ -71,19 +82,33 @@ plot(activity.data.agg.int$steps ~ activity.data.agg.int$interval,
      ylab = "average number of steps taken")
 ```
 
-```{r, echo=TRUE}
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
+
+
+```r
 # get the 5-minute interval that, on average across all the days in the dataset,
 # contains the maximum number of steps
 activity.data.agg.int[which.max(activity.data.agg.int$steps),]
 ```
 
+```
+##     interval    steps
+## 104      835 206.1698
+```
+
 ## Imputing missing values
-```{r, echo=TRUE}
+
+```r
 # get the total number of missing values in the dataset
 sum(!complete.cases(activity.data))
 ```
 
-```{r, echo=TRUE}
+```
+## [1] 2304
+```
+
+
+```r
 # create a new dataset
 activity.data.fill <- activity.data
 
@@ -101,27 +126,47 @@ activity.data.fill.agg <- aggregate(list(steps = activity.data.fill$steps),
                                )
 ```
 
-```{r, echo=TRUE}
+
+```r
 # make a new histogram of the total number of steps taken each day
 # with the new imputed dataset
 ggplot(activity.data.fill.agg, aes(x=steps)) + geom_histogram(binwidth=2000)
 ```
 
-```{r, echo=TRUE}
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
+
+
+```r
 # get the mean of total number of steps taken per day (imputed dataset)
 mean(activity.data.fill.agg$steps, na.rm = TRUE)
 ```
 
-```{r, echo=TRUE}
+```
+## [1] 10766.19
+```
+
+
+```r
 # get the median of total number of steps taken per day (imputed dataset)
 median(activity.data.fill.agg$steps, na.rm = TRUE)
 ```
+
+```
+## [1] 10766.19
+```
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r, echo=TRUE}
+
+```r
 # set the time system to English Language
 Sys.setlocale("LC_TIME", "English")
+```
 
+```
+## [1] "English_United States.1252"
+```
+
+```r
 # create a factor variable to discriminate between WDs and WEs
 activity.data.fill$days <- as.factor(ifelse(weekdays(as.Date(activity.data.fill$date)) %in% c("Saturday","Sunday"), "Weekend", "Weekday"))
 
@@ -140,3 +185,5 @@ xyplot(steps ~ interval | days,
        layout = c(1, 2),
        type = "l")
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-13-1.png) 
